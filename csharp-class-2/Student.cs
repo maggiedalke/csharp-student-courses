@@ -23,8 +23,29 @@ namespace csharp_oop_intro
      * 
      * Change the student class so the student can only have
      * 15 credits of courses at the same time. 
-     
+     * 
+     * Add the feild for NumofDropOuts for each course and implement the code.     
+     * 
+     * Implement: 
+     *  A student who dropped out of a course can't register again for the same course.
+     *  Add a max capacity for each course.
+     *  
+     *  Add a WaitingList for each course,
+     *  when a user is trying to join a full course,
+     *  the will be added to this waiting list.
+     *  Once a user leaves a course that is full, 
+     *  the first user in the waiting list will be added to the course. 
+     *  
+     * Create a new class "Institute", which contains a list of all courses, list of all students
+     *  Write the following methods:
+     *   - Get a list of all full courses
+     *   - Get a list of all students with max allowed credits
+     *   - List of all students who are in 3 waitinglists at least
+     *   - The course with the max number of students
+     *   - The course with max number of dropouts.
+     *  
      */
+
     class Student
     {
         public string Name { get; set; }
@@ -32,13 +53,22 @@ namespace csharp_oop_intro
         public string Nationality { get; set; }
         public List<Course> Courses { get; set; }
 
-        public static int MaxNumOfCredits = 15;
-        public static int TotalNumOfStudents; 
+        // Const versus readonly 
+        // Const: has to be assigned right away, available for the entire class. 
+        // readonly: does not have to be assigned right away (but can be), 
+        //assign in constructor, only available for that instance. 
+        // A "static" and "readonly" equal to const (compiled differently then const).
 
+        public const int MAX_NUM_OF_CREDITS = 15;
+        public readonly int Id;
+        public static int TotalNumOfStudents;
+        
         public Student(string name)
         {
             this.Name = name;
             this.Courses = new List<Course>();
+            Random r = new Random();
+            Id = r.Next(1000, 10000);
             TotalNumOfStudents++;
         }
 
@@ -56,22 +86,49 @@ namespace csharp_oop_intro
             // check if this student can join this course.            
             // The student does not have the course in their current list
             // The students total number of credits will not be > than max(15 in this case). 
-            if (!Courses.Contains(courseToJoin) && getCurrentCredits() + courseToJoin.Credits <= 15)
-                Courses.Add(courseToJoin);
+            // MAX_NUM_OF_CREDITS // Can not change - no room for a mistake.
+            if (!Courses.Contains(courseToJoin)
+                    && getCurrentCredits() + courseToJoin.Credits <= MAX_NUM_OF_CREDITS
+                    && !courseToJoin.DropOutStudents.Contains(this))
+            {
+                if (courseToJoin.CurrentStudents.Count < courseToJoin.MaxCapacity)
+                {
+                    Courses.Add(courseToJoin);
+                    courseToJoin.CurrentStudents.Add(this);
+                    Console.WriteLine("You have been added to the class: {0}", courseToJoin);
+                }
+                else // course is full
+                {
+                    courseToJoin.WaitingQueue.Enqueue(this);
+                    Console.WriteLine("You have been added to the Queue for the course {0}", courseToJoin);
+                }                
+            }                              
         }
 
         public void LeaveCourse(Course courseToLeave)
         {
-            // check all the buisness rules to leave a course. 
+            // check all the buisness rules to leave a course.             
             if (Courses.Contains(courseToLeave))
+            {
                 Courses.Remove(courseToLeave);
+                courseToLeave.NumOfDropOuts++;
+                courseToLeave.DropOutStudents.Add(this);
+                courseToLeave.CurrentStudents.Remove(this);
+                if(courseToLeave.WaitingQueue.Count > 0) // if waiting list is not empty
+                {
+                    var firstStudentInQueue = courseToLeave.WaitingQueue.Dequeue();
+                    firstStudentInQueue.JoinCourse(courseToLeave);
+                    Console.WriteLine("You have been added to the class: {0}", courseToLeave);
+
+                }                
+            }
         }
 
         public void PrintAllCourses()
         {
             foreach (var course in Courses)
             {
-                Console.WriteLine("The student {0}, is in these courses:", this.Name);
+                Console.WriteLine("The student {0}, is in these courses:", Name);                
                 Console.WriteLine(course.Name);
             }
         }
@@ -89,8 +146,7 @@ namespace csharp_oop_intro
 
         public static void PrintMaxAllowedCredits()
         {
-            Console.WriteLine();
-            Console.WriteLine("The maximum number of credits for this type is: {0}", MaxNumOfCredits);
+            Console.WriteLine("The maximum number of credits for this type is: {0}", MAX_NUM_OF_CREDITS);
         }
 
 

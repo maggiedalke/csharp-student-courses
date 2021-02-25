@@ -17,8 +17,11 @@ namespace csharp_oop_intro
             Console.WriteLine("STUDENTS AND COURSES");
             Student studentMike = new Student("Mike");
             Student studentChris = new Student("Chris");
-            Course introToPrograming = new Course("Programming 101", 2, 3);
+            Course introToPrograming = new Course("Programming 101", 2, 3, 30);
 
+            Student.PrintMaxAllowedCredits();
+            // Student.MaxNumOfCredits = 20; // ERROR, can not change the const variable
+            Console.WriteLine(Student.MAX_NUM_OF_CREDITS);
             Student.PrintMaxAllowedCredits();
 
             studentMike.JoinCourse(introToPrograming);
@@ -26,7 +29,11 @@ namespace csharp_oop_intro
             studentChris.JoinCourse(introToPrograming);
 
             studentMike.getCurrentCredits();
-            Math.
+
+            
+            // studentMike.Id = 21315612 // Error, can not change a readonly 
+            // Math n = new Math(); // Static class, Invalid Operation
+
 
         }
     }
