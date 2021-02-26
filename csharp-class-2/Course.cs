@@ -13,7 +13,9 @@ namespace csharp_oop_intro
         public int Credits { get; set; }
         public int Capacity { get; set; }
         public int MaxCapacity { get; set; }
-        public HashSet<Student> CurrentStudents { get; set; }
+        public List<Student> CurrentStudents { get; set; }
+        public List<int> CurrentStudentsGrades { get; set; }
+
         public int NumOfDropOuts { get; set; }
         public int capacityOfClass;
         public int numOfstudents = 0;
@@ -32,6 +34,9 @@ namespace csharp_oop_intro
             this.Duration = duration;
             this.Credits = credits;
             this.Capacity = MaxCapacity;
+            this.DropOutStudents = new HashSet<Student>();
+            this.CurrentStudents = new List<Student>();
+            this.WaitingQueue = new Queue<Student>();
         }
 
 

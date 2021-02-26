@@ -4,6 +4,7 @@ using System.Text;
 
 namespace csharp_oop_intro
 {
+
     /* Create a class "Student" that contains few student 
      * properties like (Name, Birthday Nationality)
      * and 2 different constructors, one that takes only 
@@ -35,16 +36,8 @@ namespace csharp_oop_intro
      *  the will be added to this waiting list.
      *  Once a user leaves a course that is full, 
      *  the first user in the waiting list will be added to the course. 
-     *  
-     * Create a new class "Institute", which contains a list of all courses, list of all students
-     *  Write the following methods:
-     *   - Get a list of all full courses
-     *   - Get a list of all students with max allowed credits
-     *   - List of all students who are in 3 waitinglists at least
-     *   - The course with the max number of students
-     *   - The course with max number of dropouts.
-     *  
      */
+     
 
     class Student
     {
